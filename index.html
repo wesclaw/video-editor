@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Free Video Editor</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class='container'>
+      <div class='top_two'>
+        <div class='left'></div>
+        <div class='right'>
+         <video src="" class="video_preview" controls></video>
+        </div>
+      </div>
+    
+      <div class='bottom'> 
+        <!-- add file overview -->
+        <div class='add_file_screen'>
+          <button id='add_file_btn' class='addFileBtn'>
+            <input 
+              type='file' 
+              id='file_input' 
+              class='fileInput' 
+              accept='.mp4,.gif'/>
+            <img class='fileIcon' src='icons/file.png' alt='logo'/>
+            Choose Video
+          </button>        
+        </div>
+        <!--  -->
+      </div>
+    </div>
+    
+    <script src="app.js" async defer></script>
+  </body>
+</html>
