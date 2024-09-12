@@ -98,3 +98,11 @@
   opacity: 0;
   cursor: pointer;
 }
+
+.video_block{
+  border-radius: 5px;
+  height: 100px;
+  width: 150px;
+  border: 5px dashed rgba(0, 0, 0, 0.795);
+  cursor: grab;
+}
