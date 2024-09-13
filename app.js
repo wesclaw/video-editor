@@ -22,78 +22,93 @@ fileInput.addEventListener('change', chooseFile)
 /////use interact js to create the grid for the video edit timeline
 
 function initializeInteract(element) {
-  interact(element)
-  .draggable({
-    inertia: true,
-    restrict: {
-      restriction: "#grid-timeline",
-      endOnly: true,
-      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-    },
-    autoScroll: true,
+  
+  const pixelsPerSecond = 50; 
 
-    onmove: dragMoveListener,
-    onend: snapBackToContainer
-  })
-  .snap({
-    mode: 'grid',
-    grid: { x: 5, y: 5 },
-    range: Infinity,
-    relativePoints: [{ x: 0, y: 0 }]
-  });
+  interact(element)
+    .draggable({
+      inertia: true,
+      restrict: {
+        restriction: "#grid-timeline",
+        endOnly: true,
+        elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+      },
+      autoScroll: true,
+      onmove: dragMoveListener,
+      onend: snapBackToContainer
+    })
+    .snap({
+      mode: 'grid',
+      grid: { x: 10, y: 10 },
+      range: Infinity,
+      relativePoints: [{ x: 0, y: 0 }]
+    });
 
   function dragMoveListener(event) {
-  var target = event.target;
+    const target = event.target;
 
-  var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-  var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-  target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    
 
-  target.setAttribute('data-x', x);
-  target.setAttribute('data-y', y);
+    target.style.transform = `translate(${x}px, ${y}px)`;
+
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+
+    updateStartTime(target, x);
   }
 
   function snapBackToContainer(event) {
-  var target = event.target;
-  var container = document.getElementById('grid-timeline');
-  var containerRect = container.getBoundingClientRect();
-  var targetRect = target.getBoundingClientRect();
+    const target = event.target;
+    const container = document.getElementById('grid-timeline');
+    const containerRect = container.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
 
-  var x = parseFloat(target.getAttribute('data-x')) || 0;
-  var y = parseFloat(target.getAttribute('data-y')) || 0;
+    let x = parseFloat(target.getAttribute('data-x')) || 0;
+    let y = parseFloat(target.getAttribute('data-y')) || 0;
 
-  if (targetRect.left < containerRect.left) {
-    x += containerRect.left - targetRect.left;
-  }
-  if (targetRect.top < containerRect.top) {
-    y += containerRect.top - targetRect.top;
-  }
-  if (targetRect.right > containerRect.right) {
-    x -= targetRect.right - containerRect.right;
-  }
-  if (targetRect.bottom > containerRect.bottom) {
-    y -= targetRect.bottom - containerRect.bottom;
+    if (targetRect.left < containerRect.left) {
+      x += containerRect.left - targetRect.left;
+    }
+    if (targetRect.top < containerRect.top) {
+      y += containerRect.top - targetRect.top;
+    }
+    if (targetRect.right > containerRect.right) {
+      x -= targetRect.right - containerRect.right;
+    }
+    if (targetRect.bottom > containerRect.bottom) {
+      y -= targetRect.bottom - containerRect.bottom;
+    }
+
+    target.style.transform = `translate(${x}px, ${y}px)`;
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+
+    updateStartTime(target, x);
   }
 
-  target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-  target.setAttribute('data-x', x);
-  target.setAttribute('data-y', y);
+  function updateStartTime(element, x) {
+    const startTime = Math.floor(x / pixelsPerSecond);
+    element.setAttribute('data-start-time', startTime);
+    console.log(`Block's start time updated to ${startTime} seconds.`);
   }
-
 }
 
-////create the video block in the bottom div with the video url as the bg image
+// ////create the video block in the bottom div with the video url as the bg image
 const grid_timeline = document.getElementById('grid-timeline');
 
 function createVideoBlock(videoUrl) {
   const videoBlock = document.createElement('div');
   videoBlock.classList.add('video_block');
-
+  videoBlock.setAttribute('data-start-time', 0); 
   const videoElement = document.createElement('video');
   videoElement.src = videoUrl;
   videoElement.muted = true;
   videoElement.playsInline = true;
+
+  console.log(videoBlock.getAttribute('data-start-time'))
 
   videoElement.addEventListener('loadeddata', function () {
     // Set the video to an appropriate frame (e.g., 1 second in)
@@ -132,81 +147,71 @@ function createVideoBlock(videoUrl) {
   videoElement.load();
 }
 
-/////////////////////////////
-
-
-
-
-
-
-
-///////////////////////
-
 const gridTimeline = document.getElementById('grid-timeline'); 
   
-function createTimeline() {
+// function createTimeline() {
   
-  const windowWidth = window.innerWidth;
-  const minBlockWidth = 50;
-  const blocksCount = Math.max(31, Math.floor(windowWidth / minBlockWidth)); 
+//   const windowWidth = window.innerWidth;
+//   const minBlockWidth = 50;
+//   const blocksCount = Math.max(31, Math.floor(windowWidth / minBlockWidth)); 
 
-  for (let i = 0; i < blocksCount; i++) {
-    const timeBlock = document.createElement('div');
-    timeBlock.classList.add('time-block');
-    timeBlock.setAttribute('data-time', i);   
-    gridTimeline.appendChild(timeBlock);
-    timeBlock.addEventListener('click', () => {
-      const videoPreview = document.querySelector('.video_preview');
-      videoPreview.currentTime = i; 
-    });
-  }
-}
+//   for (let i = 0; i < blocksCount; i++) {
+//     const timeBlock = document.createElement('div');
+//     timeBlock.classList.add('time-block');
+//     timeBlock.setAttribute('data-time', i);   
+//     gridTimeline.appendChild(timeBlock);
+//     timeBlock.addEventListener('click', () => {
+//       const videoPreview = document.querySelector('.video_preview');
+//       videoPreview.currentTime = i; 
+//     });
+//   }
+// }
 
-// ////move the scrubber
-const playhead = document.getElementById('playhead');
-const videoPreview = document.querySelector('.video_preview');
-const pixelPerSecond = 50;  // Each second on the timeline equals 50px
+// // ////move the scrubber
+// const playhead = document.getElementById('playhead');
+// const videoPreview = document.querySelector('.video_preview');
+// const pixelPerSecond = 50;  // Each second on the timeline equals 50px
 
-function updatePlayhead() {
-  const videoDuration = videoPreview.duration;
-  const currentTime = videoPreview.currentTime;
+// function updatePlayhead() {
+//   const videoDuration = videoPreview.duration;
+//   const currentTime = videoPreview.currentTime;
 
-  // Calculate the playhead's position based on the current time
-  const playheadPosition = currentTime * pixelPerSecond;
+//   // Calculate the playhead's position based on the current time
+//   const playheadPosition = currentTime * pixelPerSecond;
 
-  // Move the playhead
-  playhead.style.left = `${playheadPosition}px`;
+//   // Move the playhead
+//   playhead.style.left = `${playheadPosition}px`;
 
-  // Continue updating if the video is playing
-  if (!videoPreview.paused && !videoPreview.ended) {
-    requestAnimationFrame(updatePlayhead);
-  }
-}
+//   // Continue updating if the video is playing
+//   if (!videoPreview.paused && !videoPreview.ended) {
+//     requestAnimationFrame(updatePlayhead);
+//   }
+// }
 
-// When the video starts playing, start updating the playhead
-videoPreview.addEventListener('play', () => {
-  requestAnimationFrame(updatePlayhead);
-});
+// // When the video starts playing, start updating the playhead
+// videoPreview.addEventListener('play', () => {
+//   requestAnimationFrame(updatePlayhead);
+// });
 
-// Reset the playhead to the start when the video ends
-videoPreview.addEventListener('ended', () => {
-  playhead.style.left = '0px';
-});
+// // Reset the playhead to the start when the video ends
+// videoPreview.addEventListener('ended', () => {
+//   playhead.style.left = '0px';
+// });
 
-gridTimeline.addEventListener('click', (event) => {
-  const timelineRect = gridTimeline.getBoundingClientRect();
+// gridTimeline.addEventListener('click', (event) => {
+//   const timelineRect = gridTimeline.getBoundingClientRect();
   
-  // Get the click position relative to the grid-timeline
-  const clickPosition = event.clientX - timelineRect.left;
+//   // Get the click position relative to the grid-timeline
+//   const clickPosition = event.clientX - timelineRect.left;
   
-  // Calculate the corresponding time in the video
-  const clickedTime = clickPosition / pixelPerSecond;
+//   // Calculate the corresponding time in the video
+//   const clickedTime = clickPosition / pixelPerSecond;
 
-  // Ensure the time is within the video duration
-  if (clickedTime <= videoPreview.duration) {
-    videoPreview.currentTime = clickedTime;
-    updatePlayhead();  // Update playhead to the new position
-  }
-});
+//   // Ensure the time is within the video duration
+//   if (clickedTime <= videoPreview.duration) {
+//     videoPreview.currentTime = clickedTime;
+//     updatePlayhead();  // Update playhead to the new position
+//   }
+// });
 
 ///// add a play btn to the bottom of the grid
