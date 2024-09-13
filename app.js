@@ -50,8 +50,6 @@ function initializeInteract(element) {
     const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
     const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-    
-
     target.style.transform = `translate(${x}px, ${y}px)`;
 
     target.setAttribute('data-x', x);
@@ -143,11 +141,61 @@ function createVideoBlock(videoUrl) {
     // Initialize interact.js or other dragging functionality
     initializeInteract(videoBlock);
   });
-
   videoElement.load();
 }
 
 const gridTimeline = document.getElementById('grid-timeline'); 
+
+
+function createTimeline() {
+  
+  const windowWidth = window.innerWidth;
+  const minBlockWidth = 50;
+  const blocksCount = Math.max(31, Math.floor(windowWidth / minBlockWidth)); 
+
+  for (let i = 0; i < blocksCount; i++) {
+    const timeBlock = document.createElement('div');
+    timeBlock.classList.add('time-block');
+    timeBlock.setAttribute('data-time', i);   
+    gridTimeline.appendChild(timeBlock);
+    // timeBlock.addEventListener('click', () => {
+    //   const videoPreview = document.querySelector('.video_preview');
+    //   videoPreview.currentTime = i; 
+    // });
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
 // function createTimeline() {
   
