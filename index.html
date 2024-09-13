@@ -15,11 +15,20 @@
       <div class='top_two'>
         <div class='left'></div>
         <div class='right'>
-         <video src="" class="video_preview" controls></video>
+         <video src="" 
+         class="video_preview" 
+         playsinline
+         controls
+         >
+         </video>
         </div>
       </div>
     
       <div class='bottom' id="grid-timeline"> 
+
+        <!-- scrubber -->
+        <div id="playhead"></div>
+
         <!-- add file overview -->
         <div class='add_file_screen'>
           <button id='add_file_btn' class='addFileBtn'>

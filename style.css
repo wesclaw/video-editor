@@ -40,15 +40,15 @@
   border: 2px dashed black;
   display: flex;
   align-items: center;
-  justify-content: center;
   position: relative;
   cursor:crosshair;
-  position: relative;
+  width: 100vw;
+  overflow-x: auto;
 }
 
 .add_file_screen{
   position: absolute;
-  background-color: rgb(252, 225, 225);
+  background-color: rgb(247, 161, 161);
   height: 100%;
   width: 100%;
   bottom: 0;
@@ -103,8 +103,6 @@
 .video_block{
   border-radius: 5px;
   height: 100px;
-  /* set here dynamiclly instead of fixed with */
-  /* width: 150px; */
   border: 5px dashed rgba(0, 0, 0, 0.795);
   cursor: grab;
   user-select: none;
@@ -112,13 +110,11 @@
   position: absolute;
   left: 0;
   top: 50px;
+  min-width: 20px;
 }
 
-/* */
-
-
 .time-block {
-  width: 100px; /* This width represents 1 second in your timeline */
+  min-width: 50px; /* This width represents 1 second in your timeline */
   height: 100%;
   border-left: 1px solid #ccc;
   position: relative;
@@ -127,26 +123,21 @@
 }
 
 .time-block::before {
-  content: attr(data-time) "s"; /* Display the time in seconds */
+  content: attr(data-time); /* Display the time in seconds */
   position: absolute;
   top: 10px; /* Above the block */
   left: 50%;
   transform: translateX(-50%);
+  font-family: sans-serif;
+  font-size: 1.2rem;
 }
 
-.time-block-bottom{
-  width: 100px; /* This width represents 1 second in your timeline */
-  height: 100%;
-  border-left: 1px solid #ccc;
-  position: relative;
-  text-align: center;
-  font-size: 12px;
-}
-
-.time-block-bottom::before{
-  content: attr(data-time) "s"; /* Display the time in seconds */
+#playhead {
   position: absolute;
-  bottom: 10px; /* Above the block */
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background-color: darkgoldenrod;
+  z-index: 10;
 }

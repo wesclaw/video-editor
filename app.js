@@ -84,83 +84,129 @@ function initializeInteract(element) {
 }
 
 ////create the video block in the bottom div with the video url as the bg image
-
-const grid_timeline = document.getElementById('grid-timeline')
+const grid_timeline = document.getElementById('grid-timeline');
 
 function createVideoBlock(videoUrl) {
   const videoBlock = document.createElement('div');
   videoBlock.classList.add('video_block');
+
   const videoElement = document.createElement('video');
   videoElement.src = videoUrl;
-  videoElement.muted = true
+  videoElement.muted = true;
   videoElement.playsInline = true;
-  videoElement.currentTime = 5; 
 
   videoElement.addEventListener('loadeddata', function () {
-  
+    // Set the video to an appropriate frame (e.g., 1 second in)
+    videoElement.currentTime = 0;
+  });
+
+  videoElement.addEventListener('seeked', function () {
     const canvas = document.createElement('canvas');
     canvas.width = 150; 
     canvas.height = 100; 
     const ctx = canvas.getContext('2d');
 
+    // Draw the current frame of the video to the canvas
     ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
+    // Get the thumbnail URL from the canvas
     const thumbnailUrl = canvas.toDataURL();
+
+    // Set the background image of the video block
     videoBlock.style.backgroundImage = `url(${thumbnailUrl})`;
     videoBlock.style.backgroundSize = 'cover';
     videoBlock.style.backgroundPosition = 'center';
 
-    // 
-    const videoDuration = videoElement.duration; // This will give you the duration in seconds
-
-  // Define the pixel width per second (e.g., 10px per second)
+    // Calculate the width of the block based on video duration
+    const videoDuration = videoElement.duration;
     const pixelPerSecond = 50;
+    videoBlock.style.width = `${Math.ceil(videoDuration) * pixelPerSecond}px`;
 
-    // Set the width of the video block based on the video's duration
-    videoBlock.style.width = `${videoDuration * pixelPerSecond}px`;
-
-    // 
-
-    const grid_timeline = document.getElementById('grid-timeline');
+    // Add the video block to the grid timeline
     grid_timeline.appendChild(videoBlock);
 
+    // Initialize interact.js or other dragging functionality
     initializeInteract(videoBlock);
   });
 
-  
   videoElement.load();
 }
 
-// 
-const gridTimeline = document.getElementById('grid-timeline');
+/////////////////////////////
 
-// Create 30 time blocks (1s to 30s)
 
-function createTimeline(){
-  for (let i = 1; i <= 30; i++) {
+
+
+
+
+
+///////////////////////
+
+const gridTimeline = document.getElementById('grid-timeline'); 
+  
+function createTimeline() {
+  
+  const windowWidth = window.innerWidth;
+  const minBlockWidth = 50;
+  const blocksCount = Math.max(31, Math.floor(windowWidth / minBlockWidth)); 
+
+  for (let i = 0; i < blocksCount; i++) {
     const timeBlock = document.createElement('div');
     timeBlock.classList.add('time-block');
-    timeBlock.setAttribute('data-time', i); // Set time as data attribute
-    
-    // Add the block to the timeline
+    timeBlock.setAttribute('data-time', i);   
     gridTimeline.appendChild(timeBlock);
-  
-    // Add an event listener to seek video when a block is clicked
     timeBlock.addEventListener('click', () => {
       const videoPreview = document.querySelector('.video_preview');
-      videoPreview.currentTime = i; // Set the video to play from the clicked second
+      videoPreview.currentTime = i; 
     });
   }
-
 }
+
+// ////move the scrubber
+const playhead = document.getElementById('playhead');
+const videoPreview = document.querySelector('.video_preview');
+const pixelPerSecond = 50;  // Each second on the timeline equals 50px
+
+function updatePlayhead() {
+  const videoDuration = videoPreview.duration;
+  const currentTime = videoPreview.currentTime;
+
+  // Calculate the playhead's position based on the current time
+  const playheadPosition = currentTime * pixelPerSecond;
+
+  // Move the playhead
+  playhead.style.left = `${playheadPosition}px`;
+
+  // Continue updating if the video is playing
+  if (!videoPreview.paused && !videoPreview.ended) {
+    requestAnimationFrame(updatePlayhead);
+  }
+}
+
+// When the video starts playing, start updating the playhead
+videoPreview.addEventListener('play', () => {
+  requestAnimationFrame(updatePlayhead);
+});
+
+// Reset the playhead to the start when the video ends
+videoPreview.addEventListener('ended', () => {
+  playhead.style.left = '0px';
+});
+
+gridTimeline.addEventListener('click', (event) => {
+  const timelineRect = gridTimeline.getBoundingClientRect();
   
+  // Get the click position relative to the grid-timeline
+  const clickPosition = event.clientX - timelineRect.left;
+  
+  // Calculate the corresponding time in the video
+  const clickedTime = clickPosition / pixelPerSecond;
 
+  // Ensure the time is within the video duration
+  if (clickedTime <= videoPreview.duration) {
+    videoPreview.currentTime = clickedTime;
+    updatePlayhead();  // Update playhead to the new position
+  }
+});
 
-
-
-
-
-
-
-
-
+///// add a play btn to the bottom of the grid
