@@ -21,6 +21,16 @@
   width: calc(100vw - 480px);
   height: 60vh;
   border: 2px dashed black;
+  position: relative;
+}
+
+#playBtn{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .right{
@@ -132,12 +142,29 @@
   font-size: 1.2rem;
 }
 
-#playhead {
+#scrubber {
   position: absolute;
   top: 0;
   left: 0;
-  width: 2px;
+  width: 4px;
   height: 100%;
   background-color: darkgoldenrod;
   z-index: 10;
+}
+
+.animateScub{
+  animation-name: move;
+  animation-duration: 30s;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes move{
+  from{
+    position: relative;
+    width:0vw;
+  }to{
+    width:100vw;
+  }
 }
