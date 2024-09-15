@@ -33,6 +33,15 @@
   cursor: pointer;
 }
 
+#cutBtn{
+  position: absolute;
+  right: 100px;
+  bottom: 0;
+  padding: 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
 .right{
   width: 550px;
   height: 60vh;
@@ -116,15 +125,14 @@
   border: 5px dashed rgba(0, 0, 0, 0.795);
   cursor: grab;
   user-select: none;
-  background-color: rgb(155, 153, 153);
+  background-color: rgba(155, 153, 153, 0.452);
   position: absolute;
   left: 0;
   top: 50px;
-  min-width: 20px;
 }
 
 .time-block {
-  min-width: 50px; /* This width represents 1 second in your timeline */
+  min-width: 30px; /* This width represents 1 second in your timeline */
   height: 100%;
   border-left: 1px solid #ccc;
   position: relative;
@@ -142,19 +150,9 @@
   font-size: 1.2rem;
 }
 
-/* #scrubber {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background-color: darkgoldenrod;
-  z-index: 10;
-} */
-
 .animateScrub{
   animation-name: move;
-  animation-duration: 10s;
+  /* animation-duration: 30s; */
   animation-fill-mode: forwards;
   animation-timing-function: linear;
   position: absolute;
@@ -168,7 +166,10 @@
 }
 
 @keyframes move{
+  from{
+    left: 0;
+  }
   to{
-    left: 100vw;
+    left: 100%;
   }
 }
