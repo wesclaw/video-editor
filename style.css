@@ -142,7 +142,7 @@
   font-size: 1.2rem;
 }
 
-#scrubber {
+/* #scrubber {
   position: absolute;
   top: 0;
   left: 0;
@@ -150,21 +150,25 @@
   height: 100%;
   background-color: darkgoldenrod;
   z-index: 10;
-}
+} */
 
-.animateScub{
+.animateScrub{
   animation-name: move;
-  animation-duration: 30s;
+  animation-duration: 10s;
   animation-fill-mode: forwards;
   animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: darkgoldenrod;
+  z-index: 10;
+  display: block;
 }
 
 @keyframes move{
-  from{
-    position: relative;
-    width:0vw;
-  }to{
-    width:100vw;
+  to{
+    left: 100vw;
   }
 }

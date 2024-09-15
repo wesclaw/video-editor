@@ -345,10 +345,31 @@ function createTimeline(){
 }
 
 const playBtn = document.getElementById('playBtn')
+const scrubber = document.getElementById('scrubber')
 
 function playScrubber(){
-  const scrubber = document.getElementById('scrubber')
-  scrubber.classList.add('animateScub')
+  scrubber.classList.add('animateScrub')
+  isScrubberOverBlock()
+}
+
+function isScrubberOverBlock(){
+  const videoBlocks = grid_timeline.querySelectorAll('video')
+  const scrubberRect = scrubber.getBoundingClientRect()
+  for(const video of videoBlocks){
+    const videoRect = video.getBoundingClientRect()
+    if(scrubberRect.right > videoRect.left && 
+      scrubberRect.left < videoRect.right){
+      return true
+    }else{
+      return false
+    }
+  }
+  if(isScrubberOverBlock()){
+    console.log('its on the block')
+  }else{
+    console.log('off the block')
+  }
+  requestAnimationFrame(checkScrubberPosition); 
 }
 
 playBtn.addEventListener('click', playScrubber)
