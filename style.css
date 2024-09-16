@@ -150,11 +150,13 @@
   font-size: 1.2rem;
 }
 
+/* remove css animation and sync using js only */
+
 .animateScrub{
   animation-name: move;
-  /* animation-duration: 30s; */
   animation-fill-mode: forwards;
   animation-timing-function: linear;
+
   position: absolute;
   top: 0;
   left: 0;
