@@ -152,7 +152,7 @@
 
 /* remove css animation and sync using js only */
 
-.animateScrub{
+/* .animateScrub{
   animation-name: move;
   animation-fill-mode: forwards;
   animation-timing-function: linear;
@@ -174,4 +174,6 @@
   to{
     left: 100%;
   }
-}
+} */
+
+//////////////////

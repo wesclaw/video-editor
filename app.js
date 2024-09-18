@@ -350,36 +350,22 @@ const playBtn = document.getElementById('playBtn')
 
 let getFrame;
 
-let timer;
-let count = 0;
-let elapsedTime = 0
-let startTime;
-
 // sync the scrubber with the counter using js only. remove the css animation
 
 function playScrubber(){  
-  const grid_timeline_width = grid_timeline.offsetWidth; 
-  console.log(grid_timeline_width)
-  let speed = 30
+  // const grid_timeline_width = grid_timeline.offsetWidth; 
+  // let speed = 30
   if(playBtn.textContent==='Play'){
-    const animationDuration = grid_timeline_width / speed
-    scrubber.classList.add('animateScrub')
-    scrubber.style.animationDuration = `${animationDuration}s` 
+    // const animationDuration = grid_timeline_width / speed
+    // scrubber.classList.add('animateScrub')
+    // scrubber.style.animationDuration = `${animationDuration}s` 
     playBtn.textContent = 'Pause'
-    scrubber.style.animationPlayState = 'running'
-
-    startTime = Date.now() - elapsedTime;
-    timer = setInterval(()=>{
-      elapsedTime = Date.now() - startTime;
-      count = Math.ceil(elapsedTime / 1000);
-      console.log(count);
-    },100)
+    // scrubber.style.animationPlayState = 'running'
     checkScrubberPos()
   }else{
     playBtn.textContent = 'Play'
-    scrubber.style.animationPlayState = 'paused'
+    // scrubber.style.animationPlayState = 'paused'
     cancelAnimationFrame(getFrame)
-    clearInterval(timer)
   }
 }
 
