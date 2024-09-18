@@ -290,167 +290,158 @@
 
 
 
+//////////////////////////////start here
 
 
+// const video_preview = document.querySelector('.video_preview')
+// const file_input = document.getElementById('file_input')
+// const grid_timeline = document.getElementById('grid-timeline') 
 
+// let videoFilesArray = []
 
+// function getFileFromUser(){
+//   const selectedFile = file_input.files[0]
+//   const videoURL = URL.createObjectURL(selectedFile)
+//   const video_el = document.createElement('video')
+//   video_el.src = videoURL ///add a full width bg image here instead of the videoURL
 
+//   video_el.addEventListener('loadedmetadata', (e)=>{
+//     const videoDuration = Math.round(video_el.duration)
+//     video_el.style.width = `${videoDuration * 30}px`;
+//       videoFilesArray.push({
+//         duration: video_el.duration,
+//       })
+//       console.log(videoFilesArray)
+//   })
+//   createTimeline()
+//   createVideoBlob(video_el)
+// }
 
-
-
-
-
-const video_preview = document.querySelector('.video_preview')
-const file_input = document.getElementById('file_input')
-const grid_timeline = document.getElementById('grid-timeline') 
-
-let videoFilesArray = []
-
-function getFileFromUser(){
-  const selectedFile = file_input.files[0]
-  const videoURL = URL.createObjectURL(selectedFile)
-  const video_el = document.createElement('video')
-  video_el.src = videoURL ///add a full width bg image here instead of the videoURL
-
-  video_el.addEventListener('loadedmetadata', (e)=>{
-    const videoDuration = Math.round(video_el.duration)
-    video_el.style.width = `${videoDuration * 30}px`;
-      videoFilesArray.push({
-        duration: video_el.duration,
-      })
-      console.log(videoFilesArray)
-  })
-  createTimeline()
-  createVideoBlob(video_el)
-}
-
-function createVideoBlob(video_el){
-  const add_file_screen = document.querySelector('.add_file_screen')
-  video_el.classList.add('video_block')
-  grid_timeline.append(video_el)
-  add_file_screen.remove()
+// function createVideoBlob(video_el){
+//   const add_file_screen = document.querySelector('.add_file_screen')
+//   video_el.classList.add('video_block')
+//   grid_timeline.append(video_el)
+//   add_file_screen.remove()
   
-  initializeInteract(video_el)
-}
+//   initializeInteract(video_el)
+// }
 
-function createTimeline(){
-  const windowWidth = window.innerWidth;
-  const minBlockWidth = 30
-  const blocksCount = Math.max(35, Math.floor(windowWidth / minBlockWidth)); 
-  for(let i=1;i<blocksCount;i++){
-    const time_block = document.createElement('div')
-    time_block.classList.add('time-block')
-    time_block.setAttribute('data-time', i)
-    grid_timeline.append(time_block)
-  }
-}
+// function createTimeline(){
+//   const windowWidth = window.innerWidth;
+//   const minBlockWidth = 30
+//   const blocksCount = Math.max(35, Math.floor(windowWidth / minBlockWidth)); 
+//   for(let i=1;i<blocksCount;i++){
+//     const time_block = document.createElement('div')
+//     time_block.classList.add('time-block')
+//     time_block.setAttribute('data-time', i)
+//     grid_timeline.append(time_block)
+//   }
+// }
 
-const scrubber = document.getElementById('scrubber')
-const playBtn = document.getElementById('playBtn')
+// const scrubber = document.getElementById('scrubber')
+// const playBtn = document.getElementById('playBtn')
 
-let getFrame;
+// let getFrame;
 
-// sync the scrubber with the counter using js only. remove the css animation
-
-function playScrubber(){  
-  // const grid_timeline_width = grid_timeline.offsetWidth; 
-  // let speed = 30
-  if(playBtn.textContent==='Play'){
-    // const animationDuration = grid_timeline_width / speed
-    // scrubber.classList.add('animateScrub')
-    // scrubber.style.animationDuration = `${animationDuration}s` 
-    playBtn.textContent = 'Pause'
-    // scrubber.style.animationPlayState = 'running'
-    checkScrubberPos()
-  }else{
-    playBtn.textContent = 'Play'
-    // scrubber.style.animationPlayState = 'paused'
-    cancelAnimationFrame(getFrame)
-  }
-}
-
-function checkScrubberPos(){
-  const videos = grid_timeline.querySelectorAll('video')
-  for(let video of videos){
-    const vidRect = video.getBoundingClientRect()
-    const scrubRect = scrubber.getBoundingClientRect()
-    if(scrubRect.left < vidRect.right && scrubRect.right > vidRect.left){
-      console.log('its on the video')
-    }else{
-      console.log('its off the video')
-    }
-  }
-  getFrame = requestAnimationFrame(checkScrubberPos)
-}
-
-function initializeInteract(element) {
-  interact(element)
-    .draggable({
-      inertia: true,
-      restrict: {
-        restriction: "#grid-timeline",
-        endOnly: true,
-        elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-      },
-      autoScroll: true,
-      onmove: dragMoveListener,
-      onend: snapBackToContainer
-    })
-    .snap({
-      mode: 'grid',
-      grid: { x: 10, y: 10 },
-      range: Infinity,
-      relativePoints: [{ x: 0, y: 0 }]
-    });
-
-  function dragMoveListener(event) {
-    const target = event.target;
-
-    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-    target.style.transform = `translate(${x}px, ${y}px)`;
-
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
-  }
-
-    function snapBackToContainer(event) {
-    const target = event.target;
-    const container = document.getElementById('grid-timeline');
-    const containerRect = container.getBoundingClientRect();
-    const targetRect = target.getBoundingClientRect();
-
-    let x = parseFloat(target.getAttribute('data-x')) || 0;
-    let y = parseFloat(target.getAttribute('data-y')) || 0;
-
-    if (targetRect.left < containerRect.left) {
-      x += containerRect.left - targetRect.left;
-    }
-    if (targetRect.top < containerRect.top) {
-      y += containerRect.top - targetRect.top;
-    }
-    if (targetRect.right > containerRect.right) {
-      x -= targetRect.right - containerRect.right;
-    }
-    if (targetRect.bottom > containerRect.bottom) {
-      y -= targetRect.bottom - containerRect.bottom;
-    }
-
-    target.style.transform = `translate(${x}px, ${y}px)`;
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
-  }
-}
+// // sync the scrubber with the counter using js only. remove the css animation
 
 
 
-playBtn.addEventListener('click', playScrubber)
-file_input.addEventListener('change', getFileFromUser)
+// function playScrubber(){  
+//   // const grid_timeline_width = grid_timeline.offsetWidth; 
+//   // let speed = 30
+//   if(playBtn.textContent==='Play'){
+//     // const animationDuration = grid_timeline_width / speed
+//     // scrubber.classList.add('animateScrub')
+//     // scrubber.style.animationDuration = `${animationDuration}s` 
+//     playBtn.textContent = 'Pause'
+//     // scrubber.style.animationPlayState = 'running'
+//     checkScrubberPos()
+//   }else{
+//     playBtn.textContent = 'Play'
+//     // scrubber.style.animationPlayState = 'paused'
+//     cancelAnimationFrame(getFrame)
+//   }
+// }
+
+// function checkScrubberPos(){
+//   const videos = grid_timeline.querySelectorAll('video')
+//   for(let video of videos){
+//     const vidRect = video.getBoundingClientRect()
+//     const scrubRect = scrubber.getBoundingClientRect()
+//     if(scrubRect.left < vidRect.right && scrubRect.right > vidRect.left){
+//       console.log('its on the video')
+//     }else{
+//       console.log('its off the video')
+//     }
+//   }
+//   getFrame = requestAnimationFrame(checkScrubberPos)
+// }
+
+// function initializeInteract(element) {
+//   interact(element)
+//     .draggable({
+//       inertia: true,
+//       restrict: {
+//         restriction: "#grid-timeline",
+//         endOnly: true,
+//         elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+//       },
+//       autoScroll: true,
+//       onmove: dragMoveListener,
+//       onend: snapBackToContainer
+//     })
+//     .snap({
+//       mode: 'grid',
+//       grid: { x: 10, y: 10 },
+//       range: Infinity,
+//       relativePoints: [{ x: 0, y: 0 }]
+//     });
+
+//   function dragMoveListener(event) {
+//     const target = event.target;
+
+//     const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+//     const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+//     target.style.transform = `translate(${x}px, ${y}px)`;
+
+//     target.setAttribute('data-x', x);
+//     target.setAttribute('data-y', y);
+//   }
+
+//     function snapBackToContainer(event) {
+//     const target = event.target;
+//     const container = document.getElementById('grid-timeline');
+//     const containerRect = container.getBoundingClientRect();
+//     const targetRect = target.getBoundingClientRect();
+
+//     let x = parseFloat(target.getAttribute('data-x')) || 0;
+//     let y = parseFloat(target.getAttribute('data-y')) || 0;
+
+//     if (targetRect.left < containerRect.left) {
+//       x += containerRect.left - targetRect.left;
+//     }
+//     if (targetRect.top < containerRect.top) {
+//       y += containerRect.top - targetRect.top;
+//     }
+//     if (targetRect.right > containerRect.right) {
+//       x -= targetRect.right - containerRect.right;
+//     }
+//     if (targetRect.bottom > containerRect.bottom) {
+//       y -= targetRect.bottom - containerRect.bottom;
+//     }
+
+//     target.style.transform = `translate(${x}px, ${y}px)`;
+//     target.setAttribute('data-x', x);
+//     target.setAttribute('data-y', y);
+//   }
+// }
 
 
 
-
+// playBtn.addEventListener('click', playScrubber)
+// file_input.addEventListener('change', getFileFromUser)
 
 
 
@@ -458,16 +449,22 @@ file_input.addEventListener('change', getFileFromUser)
 
 
 
+// const body = document.querySelector('body')
+// const vid1 = document.querySelector('.vid1')
 
+// function runVideo(){
+//   vid1.src = 'videos/vid2.mp4'
 
+//   setTimeout(()=>{
+//     const vid2 = document.createElement('video')
+//     vid2.classList.add('vid1')
+//     body.append(vid2)
+    
+//     vid2.src = 'videos/vid3.mp4'
+//     vid1.style.display = 'none'
+//   },2000)
+// }
 
-
-
-
-
-
-
-
-
+// runVideo()
 
 
