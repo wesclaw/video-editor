@@ -182,10 +182,6 @@
 #canvas{
   width: 500px;
   height: 500px;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.274);
 }
 
-.video{
-  width: 500px;
-  height: 500px;
-}
